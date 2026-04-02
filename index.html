@@ -1,527 +1,289 @@
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="sq" id="html-root">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADC Group — Connecting Communities, Empowering People</title>
+  <title>ADC Group — WiFi Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #0a0a0a;
-      color: #f0ece4;
-      overflow-x: hidden;
-    }
-
+    body { font-family: 'DM Sans', sans-serif; background: #0a0a0a; color: #f0ece4; overflow-x: hidden; }
     a { color: inherit; text-decoration: none; }
 
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    /* NAV */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 32px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,10,10,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #e8693a; cursor: pointer; }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 13px; color: #6b6560; transition: color 0.2s; }
+    .nav-links a:hover { color: #f0ece4; }
+    .nav-cta { background: #e8693a !important; color: #0a0a0a !important; font-weight: 500 !important; padding: 8px 20px; border-radius: 4px; }
+    .nav-cta:hover { background: #f07a4e !important; }
+
+    /* LANG TOGGLE */
+    .lang-toggle {
+      display: flex; align-items: center; gap: 2px;
+      background: rgba(255,255,255,0.05); border-radius: 20px; padding: 3px;
+      margin-right: 8px;
+    }
+    .lang-btn {
+      font-size: 11px; font-weight: 500; letter-spacing: 1px;
+      padding: 4px 10px; border-radius: 16px; cursor: pointer;
+      border: none; background: transparent; color: #4a4640;
+      transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+    }
+    .lang-btn.active { background: #e8693a; color: #0a0a0a; }
+
+    /* HAMBURGER */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; z-index: 110; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #f0ece4; border-radius: 2px; transition: transform 0.3s, opacity 0.3s; transform-origin: center; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE MENU */
+    .mobile-menu { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: #2a2622; padding: 10px 0; transition: color 0.2s; display: block; text-align: center; }
+    .mobile-menu a:hover { color: #f0ece4; }
+    .mm-cta { margin-top: 28px; background: #e8693a; color: #0a0a0a !important; font-size: 16px !important; padding: 14px 40px; border-radius: 4px; font-family: 'DM Sans', sans-serif !important; font-weight: 500; }
+    .mm-divider { width: 40px; height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+
+    /* ===== CHECKIN MODAL ===== */
+    .checkin-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .checkin-overlay.hidden { display: none; }
+    .checkin-box {
+      background: #111; border: 1px solid rgba(200,80,30,0.3);
+      border-radius: 8px; padding: 48px 40px; max-width: 480px; width: 100%;
       text-align: center;
-      padding: 60px 24px 80px;
-      position: relative;
-      overflow: hidden;
     }
-
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0a05 0%, #0a0a0a 70%);
-      z-index: 0;
+    .checkin-logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #e8693a; margin-bottom: 8px; }
+    .checkin-sub { font-size: 13px; color: #5a5550; margin-bottom: 32px; line-height: 1.6; }
+    .checkin-sub span { color: #f0ece4; }
+    .checkin-field { margin-bottom: 16px; text-align: left; }
+    .checkin-field label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #5a5550; display: block; margin-bottom: 6px; }
+    .checkin-field input {
+      width: 100%; padding: 12px 16px; background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
+      color: #f0ece4; font-size: 14px; font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s; outline: none;
     }
-
-    .hero-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(200,80,30,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(200,80,30,0.06) 1px, transparent 1px);
-      background-size: 60px 60px;
-      z-index: 0;
+    .checkin-field input:focus { border-color: #e8693a; }
+    .checkin-btn {
+      width: 100%; background: #e8693a; color: #0a0a0a;
+      font-weight: 500; font-size: 15px; padding: 14px;
+      border: none; border-radius: 4px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; margin-top: 8px;
+      transition: background 0.2s;
     }
-
-    .hero-content { position: relative; z-index: 2; max-width: 900px; }
-
-    .badge {
-      display: inline-block;
-      background: rgba(200,80,30,0.15);
-      border: 1px solid rgba(200,80,30,0.4);
-      color: #e8693a;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      padding: 6px 18px;
-      border-radius: 30px;
-      margin-bottom: 32px;
-      animation: fadeUp 0.8s ease both;
+    .checkin-btn:hover { background: #f07a4e; }
+    .checkin-skip { font-size: 12px; color: #3a3632; margin-top: 16px; cursor: pointer; transition: color 0.2s; display: block; }
+    .checkin-skip:hover { color: #6b6560; }
+    .checkin-success { display: none; }
+    .checkin-success-icon { font-size: 48px; margin-bottom: 16px; }
+    .checkin-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: #6ec45a; margin-bottom: 8px; }
+    .checkin-success p { font-size: 13px; color: #5a5550; margin-bottom: 24px; line-height: 1.6; }
+    .wifi-pass-box {
+      background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px; padding: 16px; margin-bottom: 24px;
     }
+    .wifi-pass-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #5a5550; margin-bottom: 6px; }
+    .wifi-pass-val { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #e8693a; letter-spacing: 4px; }
 
-    .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(64px, 10vw, 130px);
-      line-height: 0.92;
-      letter-spacing: -1px;
-      color: #f5f0e8;
-      animation: fadeUp 0.8s 0.15s ease both;
+    /* ===== WIFI STATUS BAR ===== */
+    .wifi-bar {
+      margin-top: 64px; background: #111;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 32px;
     }
-
-    .hero-title span {
-      color: #e8693a;
-      display: block;
-    }
-
-    .hero-sub {
-      font-size: 17px;
-      font-weight: 300;
-      color: #9a9087;
-      margin-top: 28px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.7;
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
-
-    .hero-cta {
-      margin-top: 48px;
-      display: flex;
-      gap: 16px;
-      justify-content: center;
+    .wifi-bar-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 0;
       flex-wrap: wrap;
-      animation: fadeUp 0.8s 0.45s ease both;
     }
+    .wifi-stat {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 24px; border-right: 1px solid rgba(255,255,255,0.06);
+      flex: 1; min-width: 120px;
+    }
+    .wifi-stat:last-child { border-right: none; }
+    .wifi-dot { width: 8px; height: 8px; border-radius: 50%; background: #6ec45a; flex-shrink: 0; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    .wifi-dot-warn { background: #e8c23a; }
+    .wifi-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #f5f0e8; }
+    .wifi-stat-lbl { font-size: 10px; color: #4a4640; letter-spacing: 1px; text-transform: uppercase; }
+    .session-timer { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #e8693a; }
+    .extend-btn {
+      font-size: 11px; color: #e8693a; border: 1px solid rgba(200,80,30,0.3);
+      padding: 3px 10px; border-radius: 20px; cursor: pointer;
+      background: rgba(200,80,30,0.08); margin-left: 8px;
+      transition: background 0.2s; white-space: nowrap;
+    }
+    .extend-btn:hover { background: rgba(200,80,30,0.2); }
 
-    .btn-primary {
-      background: #e8693a;
-      color: #0a0a0a;
-      font-weight: 500;
-      font-size: 14px;
-      padding: 14px 32px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-      transition: transform 0.2s, background 0.2s;
-      cursor: pointer;
-      border: none;
-      font-family: 'DM Sans', sans-serif;
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 60px 24px 80px; position: relative; overflow: hidden;
     }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0a05 0%, #0a0a0a 70%); z-index: 0; }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(200,80,30,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,80,30,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 900px; }
+    .badge {
+      display: inline-block; background: rgba(200,80,30,0.15); border: 1px solid rgba(200,80,30,0.4);
+      color: #e8693a; font-size: 11px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
+      padding: 6px 18px; border-radius: 30px; margin-bottom: 32px; animation: fadeUp 0.8s ease both;
+    }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 130px); line-height: 0.92; color: #f5f0e8; animation: fadeUp 0.8s 0.15s ease both; }
+    .hero-title span { color: #e8693a; display: block; }
+    .hero-sub { font-size: 17px; font-weight: 300; color: #9a9087; margin-top: 28px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.7; animation: fadeUp 0.8s 0.3s ease both; }
+    .hero-cta { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.45s ease both; }
+    .btn-primary { background: #e8693a; color: #0a0a0a; font-weight: 500; font-size: 14px; padding: 14px 32px; border-radius: 4px; transition: transform 0.2s, background 0.2s; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; }
     .btn-primary:hover { background: #f07a4e; transform: translateY(-2px); }
-
-    .btn-ghost {
-      background: transparent;
-      color: #f0ece4;
-      font-size: 14px;
-      font-weight: 400;
-      padding: 14px 32px;
-      border-radius: 4px;
-      border: 1px solid rgba(240,236,228,0.2);
-      transition: border-color 0.2s, transform 0.2s;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-    }
+    .btn-ghost { background: transparent; color: #f0ece4; font-size: 14px; padding: 14px 32px; border-radius: 4px; border: 1px solid rgba(240,236,228,0.2); transition: border-color 0.2s, transform 0.2s; cursor: pointer; font-family: 'DM Sans', sans-serif; }
     .btn-ghost:hover { border-color: rgba(240,236,228,0.5); transform: translateY(-2px); }
-
-    /* STATS */
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      animation: fadeUp 0.8s 0.6s ease both;
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      max-width: 700px;
-      margin-top: 64px;
-    }
-
-    .stat {
-      flex: 1;
-      text-align: center;
-      padding: 28px 16px;
-      border-right: 1px solid rgba(255,255,255,0.07);
-    }
+    .stats { display: flex; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); animation: fadeUp 0.8s 0.6s ease both; position: relative; z-index: 2; width: 100%; max-width: 700px; margin-top: 64px; }
+    .stat { flex: 1; text-align: center; padding: 28px 16px; border-right: 1px solid rgba(255,255,255,0.07); }
     .stat:last-child { border-right: none; }
-    .stat-n {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 38px;
-      color: #e8693a;
-      display: block;
-    }
-    .stat-l {
-      font-size: 11px;
-      color: #6b6560;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 2px;
-      display: block;
-    }
+    .stat-n { font-family: 'Bebas Neue', sans-serif; font-size: 38px; color: #e8693a; display: block; }
+    .stat-l { font-size: 11px; color: #6b6560; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; display: block; }
 
-    /* COMPANIES */
-    .section { padding: 100px 24px; }
-    .section-label {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #e8693a;
-      margin-bottom: 16px;
-      display: block;
-    }
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(38px, 6vw, 64px);
-      color: #f5f0e8;
-      line-height: 1;
-      margin-bottom: 64px;
-    }
+    /* ===== NEWS / OFFERS ===== */
+    .news-section { padding: 80px 24px 60px; background: #0d0d0d; }
+    .news-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #e8693a; margin-bottom: 16px; display: block; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 5vw, 52px); color: #f5f0e8; line-height: 1; margin-bottom: 40px; }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2px; }
+    .news-card { background: #111; border: 1px solid rgba(255,255,255,0.05); padding: 28px; cursor: pointer; transition: border-color 0.2s, transform 0.2s; position: relative; overflow: hidden; }
+    .news-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-3px); }
+    .news-tag { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; display: inline-block; margin-bottom: 16px; font-weight: 500; }
+    .nt-volton { background: rgba(80,160,60,0.12); color: #6ec45a; border: 1px solid rgba(80,160,60,0.25); }
+    .nt-setup  { background: rgba(40,100,200,0.12); color: #5b9ee8; border: 1px solid rgba(40,100,200,0.25); }
+    .nt-adc    { background: rgba(200,80,30,0.12); color: #e8693a; border: 1px solid rgba(200,80,30,0.25); }
+    .news-title { font-size: 16px; font-weight: 500; color: #f0ece4; margin-bottom: 10px; line-height: 1.4; }
+    .news-body { font-size: 13px; color: #5a5550; line-height: 1.6; margin-bottom: 20px; }
+    .news-link { font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .nl-v { color: #6ec45a; } .nl-s { color: #5b9ee8; } .nl-a { color: #e8693a; }
+    .news-arrow { transition: transform 0.2s; display: inline-block; }
+    .news-card:hover .news-arrow { transform: translate(3px,-3px); }
 
-    .companies-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .company-card {
-      position: relative;
-      overflow: hidden;
-      padding: 48px 36px;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
+    /* ===== COMPANIES ===== */
+    .section { padding: 80px 24px; }
+    .companies-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2px; max-width: 1100px; margin: 0 auto; }
+    .company-card { position: relative; overflow: hidden; padding: 48px 36px; cursor: pointer; transition: transform 0.3s; }
     .company-card:hover { transform: translateY(-4px); }
-    .company-card:hover .card-arrow { transform: translate(3px, -3px); }
-
-    .cc-adc {
-      background: linear-gradient(145deg, #1a0000 0%, #0f0a08 100%);
-      border: 1px solid rgba(200,80,30,0.25);
-    }
-    .cc-volton {
-      background: linear-gradient(145deg, #0a1200 0%, #080f07 100%);
-      border: 1px solid rgba(80,160,60,0.25);
-    }
-    .cc-setup {
-      background: linear-gradient(145deg, #00081a 0%, #070b11 100%);
-      border: 1px solid rgba(40,100,200,0.25);
-    }
-
-    .card-tag {
-      font-size: 10px;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 2px;
-      display: inline-block;
-      margin-bottom: 28px;
-      font-weight: 500;
-    }
+    .company-card:hover .card-arrow { transform: translate(3px,-3px); }
+    .cc-adc { background: linear-gradient(145deg, #1a0000 0%, #0f0a08 100%); border: 1px solid rgba(200,80,30,0.25); }
+    .cc-volton { background: linear-gradient(145deg, #0a1200 0%, #080f07 100%); border: 1px solid rgba(80,160,60,0.25); }
+    .cc-setup { background: linear-gradient(145deg, #00081a 0%, #070b11 100%); border: 1px solid rgba(40,100,200,0.25); }
+    .card-tag { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; padding: 4px 12px; border-radius: 2px; display: inline-block; margin-bottom: 28px; font-weight: 500; }
     .tag-adc { background: rgba(200,80,30,0.15); color: #e8693a; border: 1px solid rgba(200,80,30,0.3); }
     .tag-volton { background: rgba(80,160,60,0.15); color: #6ec45a; border: 1px solid rgba(80,160,60,0.3); }
     .tag-setup { background: rgba(40,100,200,0.15); color: #5b9ee8; border: 1px solid rgba(40,100,200,0.3); }
-
-    .card-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 48px;
-      line-height: 1;
-      margin-bottom: 12px;
-    }
-    .name-adc { color: #e8693a; }
-    .name-volton { color: #6ec45a; }
-    .name-setup { color: #5b9ee8; }
-
-    .card-tagline {
-      font-size: 13px;
-      color: #6b6560;
-      font-weight: 300;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    .card-features {
-      list-style: none;
-      margin-bottom: 36px;
-    }
-    .card-features li {
-      font-size: 13px;
-      color: #8a8480;
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .card-name { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; margin-bottom: 12px; }
+    .name-adc { color: #e8693a; } .name-volton { color: #6ec45a; } .name-setup { color: #5b9ee8; }
+    .card-tagline { font-size: 13px; color: #6b6560; font-weight: 300; margin-bottom: 28px; line-height: 1.6; }
+    .card-features { list-style: none; margin-bottom: 36px; }
+    .card-features li { font-size: 13px; color: #8a8480; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 8px; }
     .card-features li:last-child { border-bottom: none; }
-    .dot-adc { width: 4px; height: 4px; border-radius: 50%; background: #e8693a; flex-shrink: 0; }
-    .dot-volton { width: 4px; height: 4px; border-radius: 50%; background: #6ec45a; flex-shrink: 0; }
-    .dot-setup { width: 4px; height: 4px; border-radius: 50%; background: #5b9ee8; flex-shrink: 0; }
-
-    .card-link {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .lk-adc { color: #e8693a; }
-    .lk-volton { color: #6ec45a; }
-    .lk-setup { color: #5b9ee8; }
-
+    .dot-adc { width:4px;height:4px;border-radius:50%;background:#e8693a;flex-shrink:0; }
+    .dot-volton { width:4px;height:4px;border-radius:50%;background:#6ec45a;flex-shrink:0; }
+    .dot-setup { width:4px;height:4px;border-radius:50%;background:#5b9ee8;flex-shrink:0; }
+    .card-link { font-size: 13px; font-weight: 500; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+    .lk-adc { color: #e8693a; } .lk-volton { color: #6ec45a; } .lk-setup { color: #5b9ee8; }
     .card-arrow { transition: transform 0.25s; display: inline-block; }
+    .card-bg-num { position: absolute; bottom: -20px; right: -10px; font-family: 'Bebas Neue', sans-serif; font-size: 160px; line-height: 1; opacity: 0.04; pointer-events: none; user-select: none; }
 
-    .card-bg-num {
-      position: absolute;
-      bottom: -20px;
-      right: -10px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 160px;
-      line-height: 1;
-      opacity: 0.04;
-      pointer-events: none;
-      user-select: none;
-    }
+    /* ===== MANIFESTO ===== */
+    .manifesto { background: #e8693a; padding: 80px 24px; text-align: center; }
+    .manifesto-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 7vw, 90px); color: #0a0a0a; line-height: 0.95; max-width: 900px; margin: 0 auto 32px; }
+    .manifesto-sub { font-size: 16px; color: rgba(0,0,0,0.55); max-width: 500px; margin: 0 auto; font-weight: 300; line-height: 1.7; }
 
-    /* MANIFESTO */
-    .manifesto {
-      background: #e8693a;
-      padding: 100px 24px;
-      text-align: center;
-    }
-    .manifesto-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(42px, 7vw, 90px);
-      color: #0a0a0a;
-      line-height: 0.95;
-      max-width: 900px;
-      margin: 0 auto 32px;
-    }
-    .manifesto-sub {
-      font-size: 16px;
-      color: rgba(0,0,0,0.55);
-      max-width: 500px;
-      margin: 0 auto;
-      font-weight: 300;
-      line-height: 1.7;
-    }
-
-    /* ECOSYSTEM */
-    .ecosystem {
-      padding: 100px 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .eco-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      margin-top: 48px;
-    }
-    .eco-card {
-      background: #111;
-      padding: 36px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
+    /* ===== ECOSYSTEM ===== */
+    .ecosystem { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+    .eco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; }
+    .eco-card { background: #111; padding: 36px; border: 1px solid rgba(255,255,255,0.05); }
     .eco-icon { font-size: 28px; margin-bottom: 16px; }
     .eco-title { font-size: 18px; font-weight: 500; margin-bottom: 10px; color: #f5f0e8; }
     .eco-text { font-size: 13px; color: #5e5a55; line-height: 1.7; font-weight: 300; }
 
-    /* FOOTER */
-    .footer-wrap {
-      border-top: 1px solid rgba(255,255,255,0.07);
+    /* ===== QUICK CONTACTS ===== */
+    .contacts-section { padding: 80px 24px; background: #0d0d0d; }
+    .contacts-inner { max-width: 1100px; margin: 0 auto; }
+    .contacts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; }
+    .contact-card { background: #111; border: 1px solid rgba(255,255,255,0.05); padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s; }
+    .contact-card:hover { border-color: rgba(255,255,255,0.12); }
+    .contact-role { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #4a4640; }
+    .contact-name { font-size: 15px; font-weight: 500; color: #f0ece4; }
+    .contact-call {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(200,80,30,0.1); border: 1px solid rgba(200,80,30,0.25);
+      color: #e8693a; font-size: 12px; font-weight: 500; padding: 8px 14px; border-radius: 4px;
+      cursor: pointer; transition: background 0.2s; width: fit-content;
     }
-    .footer {
-      padding: 56px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
+    .contact-call:hover { background: rgba(200,80,30,0.2); }
+    .call-dot { width: 6px; height: 6px; border-radius: 50%; background: #e8693a; }
+
+    /* ===== NPS ===== */
+    .nps-section { padding: 80px 24px; }
+    .nps-inner { max-width: 600px; margin: 0 auto; text-align: center; }
+    .nps-stars { display: flex; justify-content: center; gap: 12px; margin: 32px 0; }
+    .star {
+      width: 48px; height: 48px; border-radius: 4px;
+      background: #111; border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; cursor: pointer; transition: all 0.15s;
     }
-    .footer-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 28px;
-      color: #e8693a;
-      letter-spacing: 1px;
-    }
-    .footer-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: #4a4640;
-      transition: color 0.2s;
-    }
+    .star:hover, .star.active { background: rgba(232,194,58,0.15); border-color: rgba(232,194,58,0.4); transform: scale(1.1); }
+    .nps-label { font-size: 13px; color: #5a5550; min-height: 20px; margin-bottom: 24px; transition: opacity 0.2s; }
+    .nps-comment { width: 100%; padding: 12px 16px; background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: #f0ece4; font-size: 13px; font-family: 'DM Sans', sans-serif; resize: none; outline: none; transition: border-color 0.2s; display: none; }
+    .nps-comment:focus { border-color: #e8693a; }
+    .nps-submit { background: #e8693a; color: #0a0a0a; font-weight: 500; font-size: 14px; padding: 12px 32px; border-radius: 4px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; display: none; margin-top: 16px; }
+    .nps-submit:hover { background: #f07a4e; }
+    .nps-thanks { display: none; padding: 32px; background: #111; border: 1px solid rgba(110,196,90,0.25); border-radius: 8px; }
+    .nps-thanks-icon { font-size: 36px; margin-bottom: 12px; }
+    .nps-thanks h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #6ec45a; margin-bottom: 8px; }
+    .nps-thanks p { font-size: 13px; color: #5a5550; }
+
+    /* ===== FOOTER ===== */
+    .footer-wrap { border-top: 1px solid rgba(255,255,255,0.07); }
+    .footer { padding: 56px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; max-width: 1100px; margin: 0 auto; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #e8693a; }
+    .footer-links { display: flex; gap: 28px; list-style: none; }
+    .footer-links a { font-size: 13px; color: #4a4640; transition: color 0.2s; }
     .footer-links a:hover { color: #f0ece4; }
     .footer-copy { font-size: 12px; color: #3a3632; }
 
-    /* NAV */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      transition: background 0.3s;
-    }
+    /* STICKY CTA */
+    .sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 90; padding: 12px 16px; background: rgba(10,10,10,0.95); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,0.08); }
+    .sticky-cta a { display: block; background: #e8693a; color: #0a0a0a; text-align: center; font-weight: 500; font-size: 15px; padding: 16px; border-radius: 4px; }
 
-    .nav-logo {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      color: #e8693a;
-      letter-spacing: 1px;
-      cursor: pointer;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 13px;
-      color: #6b6560;
-      letter-spacing: 0.5px;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: #f0ece4; }
-
-    .nav-cta {
-      background: #e8693a;
-      color: #0a0a0a !important;
-      font-weight: 500;
-      padding: 8px 20px;
-      border-radius: 4px;
-      font-size: 13px !important;
-      transition: background 0.2s, transform 0.2s !important;
-    }
-    .nav-cta:hover { background: #f07a4e !important; transform: translateY(-1px); color: #0a0a0a !important; }
-
-    /* HAMBURGER */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-      background: none;
-      border: none;
-      z-index: 110;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: #f0ece4;
-      border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s;
-      transform-origin: center;
-    }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* MOBILE MENU OVERLAY */
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #0a0a0a;
-      z-index: 99;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .mobile-menu.open {
-      display: flex;
-      opacity: 1;
-    }
-    .mobile-menu a {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 48px;
-      color: #2a2622;
-      letter-spacing: 1px;
-      padding: 12px 0;
-      transition: color 0.2s;
-      display: block;
-      text-align: center;
-    }
-    .mobile-menu a:hover { color: #f0ece4; }
-    .mobile-menu .mm-cta {
-      margin-top: 32px;
-      background: #e8693a;
-      color: #0a0a0a !important;
-      font-size: 18px !important;
-      padding: 14px 40px;
-      border-radius: 4px;
-      font-family: 'DM Sans', sans-serif !important;
-      font-weight: 500;
-    }
-    .mobile-menu .mm-divider {
-      width: 40px;
-      height: 1px;
-      background: rgba(255,255,255,0.07);
-      margin: 8px 0;
-    }
-
-    /* STICKY MOBILE CTA */
-    .sticky-cta {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 90;
-      padding: 12px 16px;
-      background: rgba(10,10,10,0.95);
-      backdrop-filter: blur(8px);
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-    .sticky-cta a {
-      display: block;
-      background: #e8693a;
-      color: #0a0a0a;
-      text-align: center;
-      font-weight: 500;
-      font-size: 15px;
-      padding: 16px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
       .hamburger { display: flex; }
       .sticky-cta { display: block; }
       .hero { padding-top: 80px; padding-bottom: 100px; }
+      .wifi-bar-inner { gap: 0; }
+      .wifi-stat { flex: 1 1 50%; border-bottom: 1px solid rgba(255,255,255,0.06); }
     }
-
     @media (max-width: 640px) {
       .stats { flex-wrap: wrap; }
       .stat { flex: 1 1 45%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
@@ -529,39 +291,131 @@
       .footer { flex-direction: column; text-align: center; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
       body { padding-bottom: 72px; }
+      .checkin-box { padding: 32px 24px; }
+      .star { width: 40px; height: 40px; font-size: 18px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- CHECK-IN MODAL -->
+  <div class="checkin-overlay" id="checkinOverlay">
+    <div class="checkin-box">
+
+      <div id="checkinForm">
+        <div class="checkin-logo">ADC Group WiFi</div>
+        <p class="checkin-sub" data-sq="Mirë se vini! Plotësoni të dhënat për të aksesuar <span>internetin falas</span>." data-en="Welcome! Fill in your details to access <span>free WiFi</span>.">Mirë se vini! Plotësoni të dhënat për të aksesuar <span>internetin falas</span>.</p>
+        <div class="checkin-field">
+          <label data-sq="Emri &amp; Mbiemri" data-en="Full Name">Emri &amp; Mbiemri</label>
+          <input type="text" id="ci-name" placeholder="p.sh. Artan Duka" />
+        </div>
+        <div class="checkin-field">
+          <label data-sq="Email" data-en="Email">Email</label>
+          <input type="email" id="ci-email" placeholder="artan@kompania.al" />
+        </div>
+        <div class="checkin-field">
+          <label data-sq="Kompania (opsionale)" data-en="Company (optional)">Kompania (opsionale)</label>
+          <input type="text" id="ci-company" placeholder="Emri i kompanisë" />
+        </div>
+        <button class="checkin-btn" onclick="submitCheckin()" data-sq="Lidhu me WiFi →" data-en="Connect to WiFi →">Lidhu me WiFi →</button>
+        <span class="checkin-skip" onclick="skipCheckin()" data-sq="Anashkalo — vazhdo pa u regjistruar" data-en="Skip — continue without registering">Anashkalo — vazhdo pa u regjistruar</span>
+      </div>
+
+      <div class="checkin-success" id="checkinSuccess">
+        <div class="checkin-success-icon">✓</div>
+        <h3 data-sq="Jeni të lidhur!" data-en="You're connected!">Jeni të lidhur!</h3>
+        <p data-sq="Mirë se vini në rrjetin e ADC Group. Sesioni juaj është aktivizuar." data-en="Welcome to the ADC Group network. Your session has been activated.">Mirë se vini në rrjetin e ADC Group. Sesioni juaj është aktivizuar.</p>
+        <div class="wifi-pass-box">
+          <div class="wifi-pass-label" data-sq="Fjalëkalimi i WiFi" data-en="WiFi Password">Fjalëkalimi i WiFi</div>
+          <div class="wifi-pass-val">ADC@2025</div>
+        </div>
+        <button class="checkin-btn" onclick="closeCheckin()" data-sq="Shiko faqen →" data-en="View page →">Shiko faqen →</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- NAV -->
   <nav class="nav">
     <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">ADC Group</div>
     <ul class="nav-links">
-      <li><a href="#companies" onclick="event.preventDefault();document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Kompanitë</a></li>
-      <li><a href="#ecosystem" onclick="event.preventDefault();document.getElementById('ecosystem').scrollIntoView({behavior:'smooth'})">Ekosistemi</a></li>
-      <li><a href="https://adc.al/contact" target="_blank" class="nav-cta">Na Kontaktoni</a></li>
+      <li><a href="#news" onclick="event.preventDefault();document.getElementById('news').scrollIntoView({behavior:'smooth'})" data-sq="Lajme &amp; Oferta" data-en="News &amp; Offers">Lajme &amp; Oferta</a></li>
+      <li><a href="#companies" onclick="event.preventDefault();document.getElementById('companies').scrollIntoView({behavior:'smooth'})" data-sq="Kompanitë" data-en="Companies">Kompanitë</a></li>
+      <li><a href="#contacts" onclick="event.preventDefault();document.getElementById('contacts').scrollIntoView({behavior:'smooth'})" data-sq="Kontakte" data-en="Contacts">Kontakte</a></li>
+      <li>
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="btn-sq" onclick="setLang('sq')">SQ</button>
+          <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+      </li>
+      <li><a href="https://adc.al/contact" target="_blank" class="nav-cta" data-sq="Na Kontaktoni" data-en="Contact Us">Na Kontaktoni</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </nav>
 
   <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#companies" onclick="closeMenu();setTimeout(()=>document.getElementById('companies').scrollIntoView({behavior:'smooth'}),300)">Kompanitë</a>
+    <a href="#news" onclick="closeMenu();setTimeout(()=>document.getElementById('news').scrollIntoView({behavior:'smooth'}),300)" data-sq="Lajme" data-en="News">Lajme</a>
     <div class="mm-divider"></div>
     <a href="https://adc.al" target="_blank" onclick="closeMenu()">ADC</a>
     <div class="mm-divider"></div>
     <a href="https://volton.al" target="_blank" onclick="closeMenu()">Volton</a>
     <div class="mm-divider"></div>
     <a href="https://setup.al" target="_blank" onclick="closeMenu()">Setup</a>
-    <a href="https://adc.al/contact" target="_blank" class="mm-cta" onclick="closeMenu()">Na Kontaktoni →</a>
+    <div class="mm-divider"></div>
+    <div class="lang-toggle" style="margin:16px 0;">
+      <button class="lang-btn active" id="mm-btn-sq" onclick="setLang('sq')">SQ</button>
+      <button class="lang-btn" id="mm-btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="https://adc.al/contact" target="_blank" class="mm-cta" onclick="closeMenu()" data-sq="Na Kontaktoni →" data-en="Contact Us →">Na Kontaktoni →</a>
   </div>
 
   <!-- STICKY MOBILE CTA -->
   <div class="sticky-cta">
-    <a href="https://adc.al/contact" target="_blank">Na Kontaktoni — ADC Group →</a>
+    <a href="https://adc.al/contact" target="_blank" data-sq="Na Kontaktoni — ADC Group →" data-en="Contact Us — ADC Group →">Na Kontaktoni — ADC Group →</a>
+  </div>
+
+  <!-- WIFI STATUS BAR -->
+  <div class="wifi-bar" style="margin-top:64px;">
+    <div class="wifi-bar-inner">
+      <div class="wifi-stat">
+        <div class="wifi-dot"></div>
+        <div>
+          <div class="wifi-stat-val" id="dl-speed">87 Mbps</div>
+          <div class="wifi-stat-lbl" data-sq="Download" data-en="Download">Download</div>
+        </div>
+      </div>
+      <div class="wifi-stat">
+        <div class="wifi-dot"></div>
+        <div>
+          <div class="wifi-stat-val" id="ul-speed">42 Mbps</div>
+          <div class="wifi-stat-lbl" data-sq="Upload" data-en="Upload">Upload</div>
+        </div>
+      </div>
+      <div class="wifi-stat">
+        <div class="wifi-dot wifi-dot-warn"></div>
+        <div>
+          <div class="wifi-stat-val">12 ms</div>
+          <div class="wifi-stat-lbl">Ping</div>
+        </div>
+      </div>
+      <div class="wifi-stat">
+        <div class="wifi-dot"></div>
+        <div>
+          <div class="wifi-stat-val">24</div>
+          <div class="wifi-stat-lbl" data-sq="Pajisje Online" data-en="Devices Online">Pajisje Online</div>
+        </div>
+      </div>
+      <div class="wifi-stat" style="flex:2;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="session-timer" id="session-timer">2:59:47</div>
+            <span class="extend-btn" onclick="extendSession()" data-sq="+ Zgjat" data-en="+ Extend">+ Zgjat</span>
+          </div>
+          <div class="wifi-stat-lbl" data-sq="Koha e mbetur" data-en="Session time left">Koha e mbetur</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- HERO -->
@@ -569,80 +423,90 @@
     <div class="hero-bg"></div>
     <div class="hero-grid"></div>
     <div class="hero-content">
-      <span class="badge">Albanian Development Company — Group</span>
+      <span class="badge" data-sq="Albanian Development Company — Group" data-en="Albanian Development Company — Group">Albanian Development Company — Group</span>
       <h1 class="hero-title">
-        Connecting
-        <span>Communities.</span>
-        Empowering People.
+        <span data-sq="Connecting" data-en="Connecting">Connecting</span>
+        <span data-sq="Communities." data-en="Communities." style="color:#e8693a;">Communities.</span>
+        <span data-sq="Empowering People." data-en="Empowering People.">Empowering People.</span>
       </h1>
-      <p class="hero-sub">Tre kompani. Një vizion. Infrastrukturë, energji dhe teknologji — themeli i Shqipërisë moderne.</p>
+      <p class="hero-sub" data-sq="Tre kompani. Një vizion. Infrastrukturë, energji dhe teknologji — themeli i Shqipërisë moderne." data-en="Three companies. One vision. Infrastructure, energy and technology — the foundation of modern Albania.">Tre kompani. Një vizion. Infrastrukturë, energji dhe teknologji — themeli i Shqipërisë moderne.</p>
       <div class="hero-cta">
-        <button class="btn-primary" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Zbulo Grupin</button>
+        <button class="btn-primary" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})" data-sq="Zbulo Grupin" data-en="Explore the Group">Zbulo Grupin</button>
         <button class="btn-ghost" onclick="window.open('https://adc.al','_blank')">adc.al</button>
       </div>
     </div>
     <div class="stats">
-      <div class="stat">
-        <span class="stat-n">3</span>
-        <span class="stat-l">Kompani</span>
-      </div>
-      <div class="stat">
-        <span class="stat-n">10+</span>
-        <span class="stat-l">Vjet Eksperiencë</span>
-      </div>
-      <div class="stat">
-        <span class="stat-n">AL</span>
-        <span class="stat-l">& Kosovë</span>
-      </div>
-      <div class="stat">
-        <span class="stat-n">B2B</span>
-        <span class="stat-l">Fokus Kryesor</span>
-      </div>
+      <div class="stat"><span class="stat-n">3</span><span class="stat-l" data-sq="Kompani" data-en="Companies">Kompani</span></div>
+      <div class="stat"><span class="stat-n">10+</span><span class="stat-l" data-sq="Vjet Eksperiencë" data-en="Years Experience">Vjet Eksperiencë</span></div>
+      <div class="stat"><span class="stat-n">AL</span><span class="stat-l" data-sq="&amp; Kosovë" data-en="&amp; Kosovo">&amp; Kosovë</span></div>
+      <div class="stat"><span class="stat-n">B2B</span><span class="stat-l" data-sq="Fokus Kryesor" data-en="Main Focus">Fokus Kryesor</span></div>
     </div>
   </section>
+
+  <!-- NEWS & OFFERS -->
+  <div class="news-section" id="news">
+    <div class="news-inner">
+      <span class="section-label" data-sq="Lajme &amp; Oferta" data-en="News &amp; Offers">Lajme &amp; Oferta</span>
+      <h2 class="section-title" data-sq="Aktualisht nga Grupi ADC" data-en="Latest from ADC Group">Aktualisht nga Grupi ADC</h2>
+      <div class="news-grid">
+        <div class="news-card" onclick="window.open('https://volton.al','_blank')">
+          <span class="news-tag nt-volton">Volton</span>
+          <div class="news-title" data-sq="Ofertë speciale B2B — çmim fiks për 2025–2026" data-en="Special B2B offer — fixed price for 2025–2026">Ofertë speciale B2B — çmim fiks për 2025–2026</div>
+          <p class="news-body" data-sq="Siguroni energjinë e biznesit tuaj me kontratë vjetore me çmim të garantuar. Pa surpriza në faturë." data-en="Secure your business energy with a yearly contract at a guaranteed price. No billing surprises.">Siguroni energjinë e biznesit tuaj me kontratë vjetore me çmim të garantuar. Pa surpriza në faturë.</p>
+          <span class="news-link nl-v">volton.al <span class="news-arrow">↗</span></span>
+        </div>
+        <div class="news-card" onclick="window.open('https://setup.al','_blank')">
+          <span class="news-tag nt-setup">Setup IT</span>
+          <div class="news-title" data-sq="Audit falas i sigurisë IT për bizneset e reja" data-en="Free IT security audit for new clients">Audit falas i sigurisë IT për bizneset e reja</div>
+          <p class="news-body" data-sq="Setup ofron vlerësim pa pagesë të infrastrukturës tuaj IT. Zbuloni dobësitë përpara se të bëhet vonë." data-en="Setup offers a free assessment of your IT infrastructure. Find vulnerabilities before it's too late.">Setup ofron vlerësim pa pagesë të infrastrukturës tuaj IT. Zbuloni dobësitë përpara se të bëhet vonë.</p>
+          <span class="news-link nl-s">setup.al <span class="news-arrow">↗</span></span>
+        </div>
+        <div class="news-card" onclick="window.open('https://adc.al','_blank')">
+          <span class="news-tag nt-adc">ADC</span>
+          <div class="news-title" data-sq="Zgjerim i rrjetit fiber në Durrës &amp; Tiranë" data-en="Fiber network expansion in Durrës &amp; Tirana">Zgjerim i rrjetit fiber në Durrës &amp; Tiranë</div>
+          <p class="news-body" data-sq="ADC po zgjeron rrjetin e saj të telekomunikacionit. Kontaktoni për disponueshmërinë në zonën tuaj." data-en="ADC is expanding its telecommunications network. Contact us for availability in your area.">ADC po zgjeron rrjetin e saj të telekomunikacionit. Kontaktoni për disponueshmërinë në zonën tuaj.</p>
+          <span class="news-link nl-a">adc.al <span class="news-arrow">↗</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- COMPANIES -->
   <section class="section" id="companies" style="background:#0a0a0a; padding-top:80px;">
     <div style="max-width:1100px;margin:0 auto;">
-      <span class="section-label">Kompanitë e Grupit</span>
-      <h2 class="section-title">Ekosistemi ADC</h2>
+      <span class="section-label" data-sq="Kompanitë e Grupit" data-en="Group Companies">Kompanitë e Grupit</span>
+      <h2 class="section-title" data-sq="Ekosistemi ADC" data-en="The ADC Ecosystem">Ekosistemi ADC</h2>
       <div class="companies-grid">
-
-        <!-- ADC -->
         <div class="company-card cc-adc" onclick="window.open('https://adc.al','_blank')">
-          <span class="card-tag tag-adc">Kompania Mëmë</span>
+          <span class="card-tag tag-adc" data-sq="Kompania Mëmë" data-en="Parent Company">Kompania Mëmë</span>
           <div class="card-name name-adc">ADC</div>
-          <p class="card-tagline">Albanian Development Company — rrjete telekomunikacioni, IoT dhe shërbime IT për biznese.</p>
+          <p class="card-tagline" data-sq="Albanian Development Company — rrjete telekomunikacioni, IoT dhe shërbime IT për biznese." data-en="Albanian Development Company — telecom networks, IoT and IT services for businesses.">Albanian Development Company — rrjete telekomunikacioni, IoT dhe shërbime IT për biznese.</p>
           <ul class="card-features">
-            <li><span class="dot-adc"></span>Planifikim &amp; Dizenjim Rrjeti</li>
-            <li><span class="dot-adc"></span>Implementim Projekti</li>
-            <li><span class="dot-adc"></span>Shërbime IoT</li>
-            <li><span class="dot-adc"></span>Mirëmbajtja &amp; Troubleshooting</li>
+            <li><span class="dot-adc"></span><span data-sq="Planifikim &amp; Dizenjim Rrjeti" data-en="Network Planning &amp; Design">Planifikim &amp; Dizenjim Rrjeti</span></li>
+            <li><span class="dot-adc"></span><span data-sq="Implementim Projekti" data-en="Project Implementation">Implementim Projekti</span></li>
+            <li><span class="dot-adc"></span><span data-sq="Shërbime IoT" data-en="IoT Services">Shërbime IoT</span></li>
+            <li><span class="dot-adc"></span><span data-sq="Mirëmbajtja &amp; Troubleshooting" data-en="Maintenance &amp; Troubleshooting">Mirëmbajtja &amp; Troubleshooting</span></li>
           </ul>
           <span class="card-link lk-adc">adc.al <span class="card-arrow">↗</span></span>
           <div class="card-bg-num">01</div>
         </div>
-
-        <!-- VOLTON -->
         <div class="company-card cc-volton" onclick="window.open('https://volton.al','_blank')">
-          <span class="card-tag tag-volton">Energji Elektrike</span>
+          <span class="card-tag tag-volton" data-sq="Energji Elektrike" data-en="Electricity">Energji Elektrike</span>
           <div class="card-name name-volton">Volton</div>
-          <p class="card-tagline">Furnizim me energji elektrike me çmime fikse dhe të garantuara për bizneset shqiptare.</p>
+          <p class="card-tagline" data-sq="Furnizim me energji elektrike me çmime fikse dhe të garantuara për bizneset shqiptare." data-en="Electricity supply with fixed and guaranteed prices for Albanian businesses.">Furnizim me energji elektrike me çmime fikse dhe të garantuara për bizneset shqiptare.</p>
           <ul class="card-features">
-            <li><span class="dot-volton"></span>Kontrata me çmim fiks 1+ vjet</li>
-            <li><span class="dot-volton"></span>Energji e qëndrueshme</li>
-            <li><span class="dot-volton"></span>Prezencë në Shqipëri &amp; Kosovë</li>
-            <li><span class="dot-volton"></span>Zgjidhje të personalizuara</li>
+            <li><span class="dot-volton"></span><span data-sq="Kontrata me çmim fiks 1+ vjet" data-en="Fixed-price contracts 1+ year">Kontrata me çmim fiks 1+ vjet</span></li>
+            <li><span class="dot-volton"></span><span data-sq="Energji e qëndrueshme" data-en="Stable energy supply">Energji e qëndrueshme</span></li>
+            <li><span class="dot-volton"></span><span data-sq="Prezencë në Shqipëri &amp; Kosovë" data-en="Present in Albania &amp; Kosovo">Prezencë në Shqipëri &amp; Kosovë</span></li>
+            <li><span class="dot-volton"></span><span data-sq="Zgjidhje të personalizuara" data-en="Customized solutions">Zgjidhje të personalizuara</span></li>
           </ul>
           <span class="card-link lk-volton">volton.al <span class="card-arrow">↗</span></span>
           <div class="card-bg-num">02</div>
         </div>
-
-        <!-- SETUP -->
         <div class="company-card cc-setup" onclick="window.open('https://setup.al','_blank')">
-          <span class="card-tag tag-setup">Shërbime IT</span>
+          <span class="card-tag tag-setup" data-sq="Shërbime IT" data-en="IT Services">Shërbime IT</span>
           <div class="card-name name-setup">Setup</div>
-          <p class="card-tagline">We keep IT together — shërbime të menaxhuara, cloud, sigurim IT dhe projektet enterprise.</p>
+          <p class="card-tagline" data-sq="We keep IT together — shërbime të menaxhuara, cloud, sigurim IT dhe projektet enterprise." data-en="We keep IT together — managed services, cloud, IT security and enterprise projects.">We keep IT together — shërbime të menaxhuara, cloud, sigurim IT dhe projektet enterprise.</p>
           <ul class="card-features">
             <li><span class="dot-setup"></span>Managed IT Services</li>
             <li><span class="dot-setup"></span>Infrastructure &amp; Cloud</li>
@@ -652,41 +516,99 @@
           <span class="card-link lk-setup">setup.al <span class="card-arrow">↗</span></span>
           <div class="card-bg-num">03</div>
         </div>
-
       </div>
     </div>
   </section>
 
   <!-- MANIFESTO -->
   <div class="manifesto">
-    <h2 class="manifesto-title">Infrastruktura e Shqipërisë nuk pret.</h2>
-    <p class="manifesto-sub">Nga fibra optike tek energjia elektrike, nga cloud-i deri tek sigurinë e të dhënave — ne jemi aty ku bizneset kanë nevojë.</p>
+    <h2 class="manifesto-title" data-sq="Infrastruktura e Shqipërisë nuk pret." data-en="Albania's infrastructure won't wait.">Infrastruktura e Shqipërisë nuk pret.</h2>
+    <p class="manifesto-sub" data-sq="Nga fibra optike tek energjia elektrike, nga cloud-i deri tek sigurinë e të dhënave — ne jemi aty ku bizneset kanë nevojë." data-en="From fiber optic to electricity, from the cloud to data security — we are where businesses need us.">Nga fibra optike tek energjia elektrike, nga cloud-i deri tek sigurinë e të dhënave — ne jemi aty ku bizneset kanë nevojë.</p>
   </div>
 
   <!-- ECOSYSTEM -->
   <div class="ecosystem" id="ecosystem">
-    <span class="section-label">Pse Grupi ADC</span>
-    <h2 class="section-title" style="margin-bottom:0;">Avantazhet e Ekosistemit</h2>
+    <span class="section-label" data-sq="Pse Grupi ADC" data-en="Why ADC Group">Pse Grupi ADC</span>
+    <h2 class="section-title" style="margin-bottom:0;" data-sq="Avantazhet e Ekosistemit" data-en="Ecosystem Advantages">Avantazhet e Ekosistemit</h2>
     <div class="eco-grid">
       <div class="eco-card">
         <div class="eco-icon" style="color:#e8693a;">◈</div>
-        <div class="eco-title">Zgjidhje të Integruara</div>
-        <div class="eco-text">Rrjet, energji dhe IT nën një çati — partneriteti midis kompanive ju sjell eficiencë dhe kosto më të ulët.</div>
+        <div class="eco-title" data-sq="Zgjidhje të Integruara" data-en="Integrated Solutions">Zgjidhje të Integruara</div>
+        <div class="eco-text" data-sq="Rrjet, energji dhe IT nën një çati — partneriteti midis kompanive ju sjell eficiencë dhe kosto më të ulët." data-en="Network, energy and IT under one roof — the partnership between companies brings you efficiency and lower costs.">Rrjet, energji dhe IT nën një çati — partneriteti midis kompanive ju sjell eficiencë dhe kosto më të ulët.</div>
       </div>
       <div class="eco-card">
         <div class="eco-icon" style="color:#6ec45a;">◉</div>
-        <div class="eco-title">Eksperiencë Lokale</div>
-        <div class="eco-text">Njohuri të thella të tregut shqiptar dhe kosovar, me ekipe teknike të trajnuara dhe të certifikuara.</div>
+        <div class="eco-title" data-sq="Eksperiencë Lokale" data-en="Local Expertise">Eksperiencë Lokale</div>
+        <div class="eco-text" data-sq="Njohuri të thella të tregut shqiptar dhe kosovar, me ekipe teknike të trajnuara dhe të certifikuara." data-en="Deep knowledge of the Albanian and Kosovar market, with trained and certified technical teams.">Njohuri të thella të tregut shqiptar dhe kosovar, me ekipe teknike të trajnuara dhe të certifikuara.</div>
       </div>
       <div class="eco-card">
         <div class="eco-icon" style="color:#5b9ee8;">◑</div>
-        <div class="eco-title">Mbështetje B2B</div>
-        <div class="eco-text">Fokusuar tërësisht tek bizneset — SLA të qarta, account manager të dedikuar dhe raportim transparent.</div>
+        <div class="eco-title" data-sq="Mbështetje B2B" data-en="B2B Support">Mbështetje B2B</div>
+        <div class="eco-text" data-sq="Fokusuar tërësisht tek bizneset — SLA të qarta, account manager të dedikuar dhe raportim transparent." data-en="Fully focused on businesses — clear SLAs, dedicated account managers and transparent reporting.">Fokusuar tërësisht tek bizneset — SLA të qarta, account manager të dedikuar dhe raportim transparent.</div>
       </div>
       <div class="eco-card">
         <div class="eco-icon" style="color:#e8c23a;">◐</div>
-        <div class="eco-title">Rritje dhe Inovacion</div>
-        <div class="eco-text">Investime të vazhdueshme në teknologji të reja: IoT, cloud-native infrastructure dhe menaxhim inteligjent i energjisë.</div>
+        <div class="eco-title" data-sq="Rritje dhe Inovacion" data-en="Growth and Innovation">Rritje dhe Inovacion</div>
+        <div class="eco-text" data-sq="Investime të vazhdueshme në teknologji të reja: IoT, cloud-native infrastructure dhe menaxhim inteligjent i energjisë." data-en="Continuous investment in new technologies: IoT, cloud-native infrastructure and intelligent energy management.">Investime të vazhdueshme në teknologji të reja: IoT, cloud-native infrastructure dhe menaxhim inteligjent i energjisë.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK CONTACTS -->
+  <div class="contacts-section" id="contacts">
+    <div class="contacts-inner">
+      <span class="section-label" data-sq="Kontakte të Shpejta" data-en="Quick Contacts">Kontakte të Shpejta</span>
+      <h2 class="section-title" data-sq="Kemi dikë për çdo gjë" data-en="We have someone for everything">Kemi dikë për çdo gjë</h2>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-role" data-sq="Recepsioni" data-en="Reception">Recepsioni</div>
+          <div class="contact-name">ADC Group</div>
+          <a class="contact-call" href="tel:+355674001007"><span class="call-dot"></span>+355 67 400 1007</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-role" data-sq="Mbështetje IT" data-en="IT Support">Mbështetje IT</div>
+          <div class="contact-name">Setup IT</div>
+          <a class="contact-call" href="tel:+35569xxxxxxx"><span class="call-dot"></span>+355 69 XXX XXXX</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-role" data-sq="Shitje Energji" data-en="Energy Sales">Shitje Energji</div>
+          <div class="contact-name">Volton</div>
+          <a class="contact-call" href="tel:+355674001007"><span class="call-dot"></span>+355 67 400 1007</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-role" data-sq="Email i Përgjithshëm" data-en="General Email">Email i Përgjithshëm</div>
+          <div class="contact-name">ADC Group</div>
+          <a class="contact-call" href="mailto:info@adc.al"><span class="call-dot"></span>info@adc.al</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NPS -->
+  <div class="nps-section">
+    <div class="nps-inner">
+      <span class="section-label" data-sq="Feedback" data-en="Feedback">Feedback</span>
+      <h2 class="section-title" data-sq="Si ishte vizita juaj sot?" data-en="How was your visit today?">Si ishte vizita juaj sot?</h2>
+      <p style="font-size:13px;color:#5a5550;margin-bottom:0;" data-sq="Një minutë nga koha juaj na ndihmon të përmirësohemi." data-en="One minute of your time helps us improve.">Një minutë nga koha juaj na ndihmon të përmirësohemi.</p>
+
+      <div id="nps-form">
+        <div class="nps-stars" id="nps-stars">
+          <div class="star" data-val="1" onclick="selectStar(1)">★</div>
+          <div class="star" data-val="2" onclick="selectStar(2)">★</div>
+          <div class="star" data-val="3" onclick="selectStar(3)">★</div>
+          <div class="star" data-val="4" onclick="selectStar(4)">★</div>
+          <div class="star" data-val="5" onclick="selectStar(5)">★</div>
+        </div>
+        <p class="nps-label" id="nps-label"></p>
+        <textarea class="nps-comment" id="nps-comment" rows="3" placeholder="Çfarë mund të përmirësojmë? (opsionale)" id="nps-comment"></textarea>
+        <br>
+        <button class="nps-submit" id="nps-submit" onclick="submitNPS()" data-sq="Dërgo Feedback →" data-en="Send Feedback →">Dërgo Feedback →</button>
+      </div>
+
+      <div class="nps-thanks" id="nps-thanks">
+        <div class="nps-thanks-icon">✓</div>
+        <h3 data-sq="Faleminderit!" data-en="Thank you!">Faleminderit!</h3>
+        <p data-sq="Feedback-i juaj u regjistrua. Punojmë çdo ditë për t'u bërë më të mirë." data-en="Your feedback has been recorded. We work every day to get better.">Feedback-i juaj u regjistrua. Punojmë çdo ditë për t'u bërë më të mirë.</p>
       </div>
     </div>
   </div>
@@ -699,12 +621,84 @@
         <li><a href="https://adc.al" target="_blank">adc.al</a></li>
         <li><a href="https://volton.al" target="_blank">volton.al</a></li>
         <li><a href="https://setup.al" target="_blank">setup.al</a></li>
-        <li><a href="https://adc.al/contact" target="_blank">Kontakt</a></li>
+        <li><a href="https://adc.al/contact" target="_blank" data-sq="Kontakt" data-en="Contact">Kontakt</a></li>
       </ul>
       <span class="footer-copy">© 2025 Albanian Development Company</span>
     </footer>
   </div>
+
   <script>
+    /* ---- LANGUAGE ---- */
+    var lang = 'sq';
+    function setLang(l) {
+      lang = l;
+      document.querySelectorAll('[data-'+l+']').forEach(function(el) {
+        el.innerHTML = el.getAttribute('data-'+l);
+      });
+      ['btn-sq','btn-en','mm-btn-sq','mm-btn-en'].forEach(function(id) {
+        var b = document.getElementById(id);
+        if (b) b.classList.toggle('active', id.indexOf(l) > -1);
+      });
+      var cp = document.getElementById('nps-comment');
+      if (cp) cp.placeholder = l === 'sq' ? 'Çfarë mund të përmirësojmë? (opsionale)' : 'What can we improve? (optional)';
+    }
+
+    /* ---- CHECKIN ---- */
+    function submitCheckin() {
+      var name = document.getElementById('ci-name').value.trim();
+      var email = document.getElementById('ci-email').value.trim();
+      if (!name || !email) {
+        var lbl = lang === 'sq' ? 'Ju lutem plotësoni emrin dhe emailin.' : 'Please fill in your name and email.';
+        alert(lbl); return;
+      }
+      document.getElementById('checkinForm').style.display = 'none';
+      document.getElementById('checkinSuccess').style.display = 'block';
+    }
+    function skipCheckin() {
+      document.getElementById('checkinOverlay').classList.add('hidden');
+    }
+    function closeCheckin() {
+      document.getElementById('checkinOverlay').classList.add('hidden');
+    }
+
+    /* ---- SESSION TIMER ---- */
+    var totalSecs = 3 * 3600 - 13;
+    function fmtTime(s) {
+      var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
+      return h+':'+(m<10?'0':'')+m+':'+(ss<10?'0':'')+ss;
+    }
+    var timerEl = document.getElementById('session-timer');
+    var timerInt = setInterval(function() {
+      if (totalSecs > 0) { totalSecs--; timerEl.textContent = fmtTime(totalSecs); }
+      else { timerEl.textContent = lang === 'sq' ? 'Skaduar' : 'Expired'; clearInterval(timerInt); }
+    }, 1000);
+    function extendSession() {
+      totalSecs += 3600;
+      var msg = lang === 'sq' ? 'Sesioni u zgjat me 1 orë!' : 'Session extended by 1 hour!';
+      alert(msg);
+    }
+
+    /* ---- NPS ---- */
+    var npsVal = 0;
+    var npsLabels = {
+      sq: ['','Shumë e keqe','E keqe','Mesatare','E mirë','Shkëlqyeshme!'],
+      en: ['','Very poor','Poor','Average','Good','Excellent!']
+    };
+    function selectStar(val) {
+      npsVal = val;
+      document.querySelectorAll('.star').forEach(function(s, i) {
+        s.classList.toggle('active', i < val);
+      });
+      document.getElementById('nps-label').textContent = npsLabels[lang][val];
+      document.getElementById('nps-comment').style.display = 'block';
+      document.getElementById('nps-submit').style.display = 'inline-block';
+    }
+    function submitNPS() {
+      document.getElementById('nps-form').style.display = 'none';
+      document.getElementById('nps-thanks').style.display = 'block';
+    }
+
+    /* ---- HAMBURGER ---- */
     function toggleMenu() {
       var menu = document.getElementById('mobileMenu');
       var burger = document.getElementById('hamburger');
@@ -718,13 +712,21 @@
       document.body.style.overflow = '';
     }
 
-    // Hide sticky CTA when near footer
+    /* ---- STICKY CTA hide near footer ---- */
     var stickyCta = document.querySelector('.sticky-cta');
-    var footer = document.querySelector('.footer-wrap');
+    var footerW = document.querySelector('.footer-wrap');
     window.addEventListener('scroll', function() {
-      var footerTop = footer.getBoundingClientRect().top;
-      stickyCta.style.opacity = footerTop < window.innerHeight + 80 ? '0' : '1';
+      if (!footerW) return;
+      stickyCta.style.opacity = footerW.getBoundingClientRect().top < window.innerHeight + 80 ? '0' : '1';
     });
+
+    /* ---- SIMULATE WIFI SPEEDS ---- */
+    setInterval(function() {
+      var dl = Math.round(80 + Math.random() * 20);
+      var ul = Math.round(35 + Math.random() * 15);
+      document.getElementById('dl-speed').textContent = dl + ' Mbps';
+      document.getElementById('ul-speed').textContent = ul + ' Mbps';
+    }, 4000);
   </script>
 </body>
 </html>

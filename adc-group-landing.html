@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADC Group — Connecting Communities, Empowering People</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #0a0a0a;
+      color: #f0ece4;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a0a05 0%, #0a0a0a 70%);
+      z-index: 0;
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,80,30,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,80,30,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+    .badge {
+      display: inline-block;
+      background: rgba(200,80,30,0.15);
+      border: 1px solid rgba(200,80,30,0.4);
+      color: #e8693a;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 30px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(64px, 10vw, 130px);
+      line-height: 0.92;
+      letter-spacing: -1px;
+      color: #f5f0e8;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .hero-title span {
+      color: #e8693a;
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      font-weight: 300;
+      color: #9a9087;
+      margin-top: 28px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-cta {
+      margin-top: 48px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+
+    .btn-primary {
+      background: #e8693a;
+      color: #0a0a0a;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 14px 32px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, background 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { background: #f07a4e; transform: translateY(-2px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: #f0ece4;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 14px 32px;
+      border-radius: 4px;
+      border: 1px solid rgba(240,236,228,0.2);
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-ghost:hover { border-color: rgba(240,236,228,0.5); transform: translateY(-2px); }
+
+    /* STATS */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      animation: fadeUp 0.8s 0.6s ease both;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 700px;
+      margin-top: 64px;
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 28px 16px;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-n {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px;
+      color: #e8693a;
+      display: block;
+    }
+    .stat-l {
+      font-size: 11px;
+      color: #6b6560;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* COMPANIES */
+    .section { padding: 100px 24px; }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #e8693a;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(38px, 6vw, 64px);
+      color: #f5f0e8;
+      line-height: 1;
+      margin-bottom: 64px;
+    }
+
+    .companies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .company-card {
+      position: relative;
+      overflow: hidden;
+      padding: 48px 36px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .company-card:hover { transform: translateY(-4px); }
+    .company-card:hover .card-arrow { transform: translate(3px, -3px); }
+
+    .cc-adc {
+      background: linear-gradient(145deg, #1a0000 0%, #0f0a08 100%);
+      border: 1px solid rgba(200,80,30,0.25);
+    }
+    .cc-volton {
+      background: linear-gradient(145deg, #0a1200 0%, #080f07 100%);
+      border: 1px solid rgba(80,160,60,0.25);
+    }
+    .cc-setup {
+      background: linear-gradient(145deg, #00081a 0%, #070b11 100%);
+      border: 1px solid rgba(40,100,200,0.25);
+    }
+
+    .card-tag {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+    .tag-adc { background: rgba(200,80,30,0.15); color: #e8693a; border: 1px solid rgba(200,80,30,0.3); }
+    .tag-volton { background: rgba(80,160,60,0.15); color: #6ec45a; border: 1px solid rgba(80,160,60,0.3); }
+    .tag-setup { background: rgba(40,100,200,0.15); color: #5b9ee8; border: 1px solid rgba(40,100,200,0.3); }
+
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .name-adc { color: #e8693a; }
+    .name-volton { color: #6ec45a; }
+    .name-setup { color: #5b9ee8; }
+
+    .card-tagline {
+      font-size: 13px;
+      color: #6b6560;
+      font-weight: 300;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .card-features {
+      list-style: none;
+      margin-bottom: 36px;
+    }
+    .card-features li {
+      font-size: 13px;
+      color: #8a8480;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-features li:last-child { border-bottom: none; }
+    .dot-adc { width: 4px; height: 4px; border-radius: 50%; background: #e8693a; flex-shrink: 0; }
+    .dot-volton { width: 4px; height: 4px; border-radius: 50%; background: #6ec45a; flex-shrink: 0; }
+    .dot-setup { width: 4px; height: 4px; border-radius: 50%; background: #5b9ee8; flex-shrink: 0; }
+
+    .card-link {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lk-adc { color: #e8693a; }
+    .lk-volton { color: #6ec45a; }
+    .lk-setup { color: #5b9ee8; }
+
+    .card-arrow { transition: transform 0.25s; display: inline-block; }
+
+    .card-bg-num {
+      position: absolute;
+      bottom: -20px;
+      right: -10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 160px;
+      line-height: 1;
+      opacity: 0.04;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* MANIFESTO */
+    .manifesto {
+      background: #e8693a;
+      padding: 100px 24px;
+      text-align: center;
+    }
+    .manifesto-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(42px, 7vw, 90px);
+      color: #0a0a0a;
+      line-height: 0.95;
+      max-width: 900px;
+      margin: 0 auto 32px;
+    }
+    .manifesto-sub {
+      font-size: 16px;
+      color: rgba(0,0,0,0.55);
+      max-width: 500px;
+      margin: 0 auto;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ECOSYSTEM */
+    .ecosystem {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .eco-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 48px;
+    }
+    .eco-card {
+      background: #111;
+      padding: 36px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .eco-icon { font-size: 28px; margin-bottom: 16px; }
+    .eco-title { font-size: 18px; font-weight: 500; margin-bottom: 10px; color: #f5f0e8; }
+    .eco-text { font-size: 13px; color: #5e5a55; line-height: 1.7; font-weight: 300; }
+
+    /* FOOTER */
+    .footer-wrap {
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer {
+      padding: 56px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: #e8693a;
+      letter-spacing: 1px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: #4a4640;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: #f0ece4; }
+    .footer-copy { font-size: 12px; color: #3a3632; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .stats { flex-wrap: wrap; }
+      .stat { flex: 1 1 45%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .eco-grid { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <span class="badge">Albanian Development Company — Group</span>
+      <h1 class="hero-title">
+        Connecting
+        <span>Communities.</span>
+        Empowering People.
+      </h1>
+      <p class="hero-sub">Tre kompani. Një vizion. Infrastrukturë, energji dhe teknologji — themeli i Shqipërisë moderne.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="document.getElementById('companies').scrollIntoView({behavior:'smooth'})">Zbulo Grupin</button>
+        <button class="btn-ghost" onclick="window.open('https://adc.al','_blank')">adc.al</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-n">3</span>
+        <span class="stat-l">Kompani</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">10+</span>
+        <span class="stat-l">Vjet Eksperiencë</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">AL</span>
+        <span class="stat-l">& Kosovë</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">B2B</span>
+        <span class="stat-l">Fokus Kryesor</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPANIES -->
+  <section class="section" id="companies" style="background:#0a0a0a; padding-top:80px;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <span class="section-label">Kompanitë e Grupit</span>
+      <h2 class="section-title">Ekosistemi ADC</h2>
+      <div class="companies-grid">
+
+        <!-- ADC -->
+        <div class="company-card cc-adc" onclick="window.open('https://adc.al','_blank')">
+          <span class="card-tag tag-adc">Kompania Mëmë</span>
+          <div class="card-name name-adc">ADC</div>
+          <p class="card-tagline">Albanian Development Company — rrjete telekomunikacioni, IoT dhe shërbime IT për biznese.</p>
+          <ul class="card-features">
+            <li><span class="dot-adc"></span>Planifikim &amp; Dizenjim Rrjeti</li>
+            <li><span class="dot-adc"></span>Implementim Projekti</li>
+            <li><span class="dot-adc"></span>Shërbime IoT</li>
+            <li><span class="dot-adc"></span>Mirëmbajtja &amp; Troubleshooting</li>
+          </ul>
+          <span class="card-link lk-adc">adc.al <span class="card-arrow">↗</span></span>
+          <div class="card-bg-num">01</div>
+        </div>
+
+        <!-- VOLTON -->
+        <div class="company-card cc-volton" onclick="window.open('https://volton.al','_blank')">
+          <span class="card-tag tag-volton">Energji Elektrike</span>
+          <div class="card-name name-volton">Volton</div>
+          <p class="card-tagline">Furnizim me energji elektrike me çmime fikse dhe të garantuara për bizneset shqiptare.</p>
+          <ul class="card-features">
+            <li><span class="dot-volton"></span>Kontrata me çmim fiks 1+ vjet</li>
+            <li><span class="dot-volton"></span>Energji e qëndrueshme</li>
+            <li><span class="dot-volton"></span>Prezencë në Shqipëri &amp; Kosovë</li>
+            <li><span class="dot-volton"></span>Zgjidhje të personalizuara</li>
+          </ul>
+          <span class="card-link lk-volton">volton.al <span class="card-arrow">↗</span></span>
+          <div class="card-bg-num">02</div>
+        </div>
+
+        <!-- SETUP -->
+        <div class="company-card cc-setup" onclick="window.open('https://setup.al','_blank')">
+          <span class="card-tag tag-setup">Shërbime IT</span>
+          <div class="card-name name-setup">Setup</div>
+          <p class="card-tagline">We keep IT together — shërbime të menaxhuara, cloud, sigurim IT dhe projektet enterprise.</p>
+          <ul class="card-features">
+            <li><span class="dot-setup"></span>Managed IT Services</li>
+            <li><span class="dot-setup"></span>Infrastructure &amp; Cloud</li>
+            <li><span class="dot-setup"></span>IT Security</li>
+            <li><span class="dot-setup"></span>IT Project Management</li>
+          </ul>
+          <span class="card-link lk-setup">setup.al <span class="card-arrow">↗</span></span>
+          <div class="card-bg-num">03</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <div class="manifesto">
+    <h2 class="manifesto-title">Infrastruktura e Shqipërisë nuk pret.</h2>
+    <p class="manifesto-sub">Nga fibra optike tek energjia elektrike, nga cloud-i deri tek sigurinë e të dhënave — ne jemi aty ku bizneset kanë nevojë.</p>
+  </div>
+
+  <!-- ECOSYSTEM -->
+  <div class="ecosystem">
+    <span class="section-label">Pse Grupi ADC</span>
+    <h2 class="section-title" style="margin-bottom:0;">Avantazhet e Ekosistemit</h2>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-icon" style="color:#e8693a;">◈</div>
+        <div class="eco-title">Zgjidhje të Integruara</div>
+        <div class="eco-text">Rrjet, energji dhe IT nën një çati — partneriteti midis kompanive ju sjell eficiencë dhe kosto më të ulët.</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icon" style="color:#6ec45a;">◉</div>
+        <div class="eco-title">Eksperiencë Lokale</div>
+        <div class="eco-text">Njohuri të thella të tregut shqiptar dhe kosovar, me ekipe teknike të trajnuara dhe të certifikuara.</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icon" style="color:#5b9ee8;">◑</div>
+        <div class="eco-title">Mbështetje B2B</div>
+        <div class="eco-text">Fokusuar tërësisht tek bizneset — SLA të qarta, account manager të dedikuar dhe raportim transparent.</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-icon" style="color:#e8c23a;">◐</div>
+        <div class="eco-title">Rritje dhe Inovacion</div>
+        <div class="eco-text">Investime të vazhdueshme në teknologji të reja: IoT, cloud-native infrastructure dhe menaxhim inteligjent i energjisë.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-wrap">
+    <footer class="footer">
+      <div class="footer-logo">ADC Group</div>
+      <ul class="footer-links">
+        <li><a href="https://adc.al" target="_blank">adc.al</a></li>
+        <li><a href="https://volton.al" target="_blank">volton.al</a></li>
+        <li><a href="https://setup.al" target="_blank">setup.al</a></li>
+        <li><a href="https://adc.al/contact" target="_blank">Kontakt</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Albanian Development Company</span>
+    </footer>
+  </div>
+
+</body>
+</html>

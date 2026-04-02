@@ -144,13 +144,13 @@
       background-image: linear-gradient(rgba(200,80,30,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,80,30,0.06) 1px, transparent 1px);
       background-size: 60px 60px;
     }
-    .hero-content { position: relative; z-index: 2; max-width: 900px; }
+    .hero-content { position: relative; z-index: 2; width: 100%; max-width: 860px; padding: 0 16px; }
     .badge {
       display: inline-block; background: rgba(200,80,30,0.15); border: 1px solid rgba(200,80,30,0.4);
       color: #e8693a; font-size: 11px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase;
       padding: 6px 18px; border-radius: 30px; margin-bottom: 32px; animation: fadeUp 0.8s ease both;
     }
-    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 130px); line-height: 0.92; color: #f5f0e8; animation: fadeUp 0.8s 0.15s ease both; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(44px, 7.5vw, 108px); line-height: 1.0; color: #f5f0e8; animation: fadeUp 0.8s 0.15s ease both; word-break: break-word; overflow-wrap: break-word; }
     .hero-title span { color: #e8693a; display: block; }
     .hero-sub { font-size: 17px; font-weight: 300; color: #9a9087; margin-top: 28px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.7; animation: fadeUp 0.8s 0.3s ease both; }
     .hero-cta { margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.45s ease both; }
@@ -285,6 +285,8 @@
       .wifi-stat { flex: 1 1 50%; border-bottom: 1px solid rgba(255,255,255,0.06); }
     }
     @media (max-width: 640px) {
+      .hero-title { font-size: clamp(38px, 11vw, 64px); line-height: 1.05; }
+      .hero-content { padding: 0 8px; }
       .stats { flex-wrap: wrap; }
       .stat { flex: 1 1 45%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
       .eco-grid { grid-template-columns: 1fr; }
@@ -578,7 +580,7 @@
         <div class="contact-card">
           <div class="contact-role" data-sq="Email i Përgjithshëm" data-en="General Email">Email i Përgjithshëm</div>
           <div class="contact-name">ADC Group</div>
-          <a class="contact-call" href="mailto:info@adc.al"><span class="call-dot"></span>info@adc.al</a>
+          <a class="contact-call" href="/cdn-cgi/l/email-protection#60090e060f200104034e010c"><span class="call-dot"></span><span class="__cf_email__" data-cfemail="a9c0c7cfc6e9c8cdca87c8c5">[email&#160;protected]</span></a>
         </div>
       </div>
     </div>
@@ -627,7 +629,7 @@
     </footer>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     /* ---- LANGUAGE ---- */
     var lang = 'sq';
     function setLang(l) {
@@ -723,10 +725,4 @@
     /* ---- SIMULATE WIFI SPEEDS ---- */
     setInterval(function() {
       var dl = Math.round(80 + Math.random() * 20);
-      var ul = Math.round(35 + Math.random() * 15);
-      document.getElementById('dl-speed').textContent = dl + ' Mbps';
-      document.getElementById('ul-speed').textContent = ul + ' Mbps';
-    }, 4000);
-  </script>
-</body>
-</html>
+      v
